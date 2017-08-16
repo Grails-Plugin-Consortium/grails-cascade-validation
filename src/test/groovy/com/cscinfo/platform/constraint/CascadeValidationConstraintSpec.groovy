@@ -185,4 +185,24 @@ class CascadeValidationConstraintSpec extends Specification {
         expect:
         constraint.supports(List)
     }
+
+    def "constraint rejects null"() {
+        given:
+        constraint = new CascadeValidationConstraint(
+            owningClass: ValidateableParent,
+            propertyName: 'property',
+            constraintParameter: true)
+        expect:
+        constraint.validateWithVetoing(parent, null, errors) == false
+    }
+
+    def "constraint rejects nulls in collection"() {
+        given:
+        constraint = new CascadeValidationConstraint(
+            owningClass: ValidateableParentWithChildList,
+            propertyName: 'children',
+            constraintParameter: true)
+        expect:
+        constraint.validateWithVetoing(parent, [null], errors) == false
+    }
 }
